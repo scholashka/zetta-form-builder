@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { GroupWrapper } from "./GroupWrapper";
 import { FormSchema, Field, Group } from "../types/formTypes";
@@ -7,12 +8,13 @@ import { Dropdown } from "./inputs/Dropdown";
 import { CheckboxInput } from "./inputs/CheckboxInput";
 import { RadioGroupInput } from "./inputs/RadioGroupInput";
 import { ValidatedInput } from "./inputs/ValidatedInput";
-import { useState } from "react";
+import { validateField } from "../lib/validators";
 
 type Props = { schema: FormSchema };
 
 export function FormRenderer({ schema }: Props) {
     const [values, setValues] = useState<Record<string, any>>({});
+    const [submitErrors, setSubmitErrors] = useState<string[]>([]);
     const handleChange = (fieldId: string, value: any) => {
         setValues((prev) => ({ ...prev, [fieldId]: value }));
     };
@@ -40,7 +42,7 @@ export function FormRenderer({ schema }: Props) {
             case "radio":
                 return <RadioGroupInput key={field.id} field={field} value={values[field.id] || ""} onChange={handleChange} />;
             case "validatedInput":
-                return <ValidatedInput key={field.id} field={field} value={values[field.id] || ""} onChange={handleChange} />;
+                return <ValidatedInput key={field.id} field={field} value={values[field.id] || ""} onChange={handleChange} allValues={values} />;
             // Add more cases for other field types as needed
             default:
                 return null;
@@ -58,7 +60,25 @@ export function FormRenderer({ schema }: Props) {
     };
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Submitted values:", values);
+
+        // Validate all fields currently visible
+        const errors: string[] = [];
+        schema.groups.forEach(function walk(g) {
+            // validate fields
+            g.fields?.forEach((f) => {
+                if (!isVisible(f, values)) return;
+                const res = validateField(f, values[f.id], values);
+                if (!res.valid && res.error) errors.push(res.error);
+            });
+            g.groups?.forEach(walk as any);
+        });
+
+        setSubmitErrors(errors);
+
+        if (errors.length === 0) {
+            console.log("Submit values:", values);
+            // TODO: build JSON output
+        }
     };
 
     return (
@@ -73,9 +93,15 @@ export function FormRenderer({ schema }: Props) {
 
             {schema.groups.map((group) => renderGroup(group))}
 
+            {submitErrors.length > 0 && (
+                <Typography color="error" sx={{ textAlign: "center" }}>
+                    {submitErrors[0]}
+                </Typography>
+            )}
             <Button type="submit" variant="contained" color="primary">
                 Submit
             </Button>
         </Box>
+
     );
 }
