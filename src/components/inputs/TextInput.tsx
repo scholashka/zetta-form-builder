@@ -1,15 +1,16 @@
 import { TextField } from "@mui/material";
-import { Field } from "../../types/formTypes";
+import { FieldStringProps } from "../../types/formTypes";
 
-type Props = { field: Field };
 
-export function TextInput({ field }: Props) {
+export function TextInput({ field, value, onChange }: FieldStringProps) {
     return (
         <TextField
             id={field.id}
             label={field.label}
             variant="outlined"
             fullWidth
+            value={value}
+            onChange={(e) => onChange?.(field.id, e.target.value)}
         />
     );
 }

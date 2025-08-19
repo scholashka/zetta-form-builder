@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
-import { Field } from "../../types/formTypes";
+import { FieldStringProps } from "../../types/formTypes";
 
-type Props = { field: Field };
-
-export function ValidatedInput({ field }: Props) {
+export function ValidatedInput({ field, value, onChange }: FieldStringProps) {
     return (
         <TextField
             id={field.id}
@@ -11,6 +9,8 @@ export function ValidatedInput({ field }: Props) {
             variant="outlined"
             fullWidth
             helperText="To Do: Add validation logic"
+            value={value}
+            onChange={(e) => onChange(field.id, e.target.value)}
         />
     );
 }

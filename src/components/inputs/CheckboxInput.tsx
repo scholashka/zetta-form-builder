@@ -1,12 +1,15 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
-import { Field } from "../../types/formTypes";
+import { FieldBooleanProps } from "../../types/formTypes";
 
-type Props = { field: Field };
-
-export function CheckboxInput({ field }: Props) {
+export function CheckboxInput({ field, value, onChange }: FieldBooleanProps) {
     return (
         <FormControlLabel
-            control={<Checkbox />}
+            control={
+                <Checkbox
+                    checked={value}
+                    onChange={(e) => onChange(field.id, e.target.checked)}
+                />
+            }
             label={field.label}
         />
     );

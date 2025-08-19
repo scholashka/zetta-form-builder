@@ -1,9 +1,7 @@
 import { FormControl, FormControlLabel, Radio, RadioGroup, Typography } from "@mui/material";
-import { Field } from "../../types/formTypes";
+import { FieldStringProps } from "../../types/formTypes";
 
-type Props = { field: Field };
-
-export function RadioGroupInput({ field }: Props) {
+export function RadioGroupInput({ field, value, onChange }: FieldStringProps) {
     return (
         <FormControl>
             <Typography variant="subtitle1">{field.label}</Typography>
@@ -12,7 +10,8 @@ export function RadioGroupInput({ field }: Props) {
                     <FormControlLabel
                         key={opt}
                         value={opt}
-                        control={<Radio />}
+                        control={<Radio value={value}
+                            onChange={(e) => onChange(field.id, e.target.value)} />}
                         label={opt}
                     />
                 ))}

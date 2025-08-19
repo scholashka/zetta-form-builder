@@ -1,9 +1,7 @@
 import { TextField } from "@mui/material";
-import { Field } from "../../types/formTypes";
+import { FieldStringProps } from "../../types/formTypes";
 
-type Props = { field: Field };
-
-export function TextArea({ field }: Props) {
+export function TextArea({ field, value, onChange }: FieldStringProps) {
     return (
         <TextField
             id={field.id}
@@ -12,6 +10,8 @@ export function TextArea({ field }: Props) {
             fullWidth
             multiline
             rows={4}
+            value={value}
+            onChange={(e) => onChange(field.id, e.target.value)}
         />
     );
 }
