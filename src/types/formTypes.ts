@@ -12,6 +12,7 @@ export interface Field {
     label: string;
     options?: string[]; // for dropdown / radio
     validations?: Record<string, any>;
+    visibleWhen?: Record<string, string>;
 }
 
 export interface Group {
@@ -25,3 +26,14 @@ export interface FormSchema {
     title: string;
     groups: Group[];
 }
+
+export type FieldStringProps = {
+    field: Field;
+    value: string;
+    onChange: (id: string, value: string) => void;
+};
+export type FieldBooleanProps = {
+    field: Field;
+    value: boolean;
+    onChange: (id: string, value: boolean) => void;
+};
