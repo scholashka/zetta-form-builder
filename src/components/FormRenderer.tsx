@@ -26,6 +26,8 @@ export function FormRenderer({ schema }: Props) {
         );
     };
     const renderField = (field: Field) => {
+        if (!isVisible(field, values)) return null;
+
         switch (field.type) {
             case "text":
                 return <TextInput key={field.id} field={field} value={values[field.id] || ""} onChange={handleChange} />;
@@ -44,24 +46,32 @@ export function FormRenderer({ schema }: Props) {
                 return null;
         }
     };
+    const renderGroup = (group: Group, depth = 0) => {
+        if (!isVisible(group, values)) return null;
+
+        return (
+            <GroupWrapper key={group.id} label={group.label} depth={depth}>
+                {group.fields?.map(renderField)}
+                {group.groups?.map((child) => renderGroup(child, depth + 1))}
+            </GroupWrapper>
+        );
+    };
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Submitted values:", values);
+    };
 
     return (
         <Box
             component="form"
             sx={{ display: "flex", flexDirection: "column", gap: 4 }}
+            onSubmit={handleSubmit}
         >
             <Typography variant="h5" gutterBottom>
                 {schema.title}
             </Typography>
 
-            {schema.groups.map(
-                (group) =>
-                    isVisible(group, values) && (
-                        <GroupWrapper key={group.id} label={group.label}>
-                            {group.fields.map(renderField)}
-                        </GroupWrapper>
-                    )
-            )}
+            {schema.groups.map((group) => renderGroup(group))}
 
             <Button type="submit" variant="contained" color="primary">
                 Submit

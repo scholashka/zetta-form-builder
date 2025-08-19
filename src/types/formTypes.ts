@@ -19,6 +19,7 @@ export interface Group {
     id: string;
     label: string;
     fields: Field[];
+    groups?: Group[]; // nested groups
     visibleWhen?: Record<string, string>; // for dynamic visibility
 }
 
