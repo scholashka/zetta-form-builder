@@ -1,20 +1,7 @@
-import { useMemo, useState } from "react";
 import { TextField } from "@mui/material";
-import { Field, FieldStringProps } from "../../types/formTypes";
-import { validateField } from "../../lib/validators";
+import { FieldStringProps } from "../../types/formTypes";
 
-type Props = FieldStringProps & {
-    allValues: Record<string, any>;
-};
-
-export function ValidatedInput({ field, value, onChange, allValues }: Props) {
-    const [touched, setTouched] = useState(false);
-
-    const { error, valid } = useMemo(() => {
-        const res = validateField(field as Field, value, allValues);
-        return { error: res.error, valid: res.valid };
-    }, [field, value, allValues]);
-
+export function ValidatedInput({ field, value, onChange, error, helperText, onBlur }: FieldStringProps) {
     return (
         <TextField
             id={field.id}
@@ -23,9 +10,9 @@ export function ValidatedInput({ field, value, onChange, allValues }: Props) {
             fullWidth
             value={value}
             onChange={(e) => onChange(field.id, e.target.value)}
-            onBlur={() => setTouched(true)}
-            error={touched && !valid}
-            helperText={touched && !valid ? error : " "}
+            onBlur={() => onBlur?.(field.id)}
+            error={Boolean(error)}
+            helperText={helperText ?? " "}
         />
     );
 }

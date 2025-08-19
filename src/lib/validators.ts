@@ -19,20 +19,29 @@ export function validateField(
     const v = field.validations;
     if (!v) return { valid: true };
 
-    const str = (value ?? "").toString();
-
     // required
     if (v.required) {
-        const isEmpty = typeof value === "boolean" ? false : str.trim() === "";
-        if (isEmpty) {
-            return {
-                valid: false,
-                error: v.message || `${field.label} is required`,
-            };
+        if (field.type === "checkbox") {
+            if (value !== true) {
+                return {
+                    valid: false,
+                    error: v.message || `${field.label} is required`,
+                };
+            }
+        } else {
+            const str = (value ?? "").toString();
+            if (str.trim() === "") {
+                return {
+                    valid: false,
+                    error: v.message || `${field.label} is required`,
+                };
+            }
         }
     }
 
-    // minLength / maxLength (strings)
+    // min/max length
+    const str = (value ?? "").toString();
+
     if (typeof v.minLength === "number" && str.length < v.minLength) {
         return {
             valid: false,
@@ -50,7 +59,7 @@ export function validateField(
         };
     }
 
-    // dependent pattern
+    // dependent pattern or plain pattern
     let pattern = v.pattern || "";
     if (v.dependsOn && v.rules) {
         const depValue = allValues[v.dependsOn];

@@ -41,9 +41,15 @@ export type FieldStringProps = {
     field: Field;
     value: string;
     onChange: (id: string, value: string) => void;
+    error?: boolean;
+    helperText?: string;
+    onBlur?: (id: string) => void;
 };
 export type FieldBooleanProps = {
     field: Field;
     value: boolean;
     onChange: (id: string, value: boolean) => void;
+    error?: boolean;
+    helperText?: string;
+    onBlur?: (id: string) => void;
 };
