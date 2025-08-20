@@ -22,6 +22,7 @@ export interface Field {
     options?: string[]; // for dropdown / radio
     validations?: ValidationConfig;
     visibleWhen?: Record<string, string>;
+    autoFill?: AutoFillConfig; // API config for auto-filling
 }
 
 export interface Group {
@@ -30,6 +31,7 @@ export interface Group {
     fields: Field[];
     groups?: Group[]; // nested groups
     visibleWhen?: Record<string, string>; // for dynamic visibility
+    autoFill?: AutoFillConfig; // API config for auto-filling
 }
 
 export interface FormSchema {
@@ -52,4 +54,10 @@ export type FieldBooleanProps = {
     error?: boolean;
     helperText?: string;
     onBlur?: (id: string) => void;
+};
+export type AutoFillConfig = {
+    api: string;
+    inputFields: string[];
+    map: Record<string, string>; // Map API response keys to field IDs
+    whenVisibleOnly?: boolean; // Only fill if the form is visible
 };
