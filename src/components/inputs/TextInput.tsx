@@ -1,8 +1,7 @@
 import { TextField } from "@mui/material";
 import { FieldStringProps } from "../../types/formTypes";
 
-
-export function TextInput({ field, value, onChange }: FieldStringProps) {
+export function TextInput({ field, value, onChange, error, helperText, onBlur }: FieldStringProps) {
     return (
         <TextField
             id={field.id}
@@ -10,7 +9,10 @@ export function TextInput({ field, value, onChange }: FieldStringProps) {
             variant="outlined"
             fullWidth
             value={value}
-            onChange={(e) => onChange?.(field.id, e.target.value)}
+            onChange={(e) => onChange(field.id, e.target.value)}
+            onBlur={() => onBlur?.(field.id)}
+            error={Boolean(error)}
+            helperText={helperText ?? " "}
         />
     );
 }
