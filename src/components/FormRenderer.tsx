@@ -19,6 +19,8 @@ import {
     makeAutoFillKey,
     buildPayload,
 } from "../lib/autofill";
+import { buildSubmission } from "../lib/submission";
+import { JsonPreview } from "./JsonPreview";
 
 type Props = { schema: FormSchema };
 
@@ -27,6 +29,7 @@ export function FormRenderer({ schema }: Props) {
     const [values, setValues] = useState<Record<string, any>>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
     const [submitAttempted, setSubmitAttempted] = useState(false);
+    const [submitOutput, setSubmitOutput] = useState<any | null>(null);
 
     // auto-fill state
     const [loadingKeys, setLoadingKeys] = useState<Record<string, boolean>>({});
@@ -167,8 +170,8 @@ export function FormRenderer({ schema }: Props) {
 
         if (invalid) return;
 
-        console.log("✅ Submit values:", values);
-        // TODO: JSON output
+        const output = buildSubmission(schema, values, isVisible);
+        setSubmitOutput(output);
     };
 
     // auto-fill effect
@@ -224,6 +227,9 @@ export function FormRenderer({ schema }: Props) {
             <Button type="submit" variant="contained" color="primary">
                 Submit
             </Button>
+            {submitOutput && (
+                <JsonPreview data={submitOutput} onClose={() => setSubmitOutput(null)} />
+            )}
         </Box>
     );
 }
