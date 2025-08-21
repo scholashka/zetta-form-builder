@@ -20,16 +20,14 @@ import {
     buildPayload,
 } from "../lib/autofill";
 import { buildSubmission } from "../lib/submission";
-import { JsonPreview } from "./JsonPreview";
 
-type Props = { schema: FormSchema };
+type Props = { schema: FormSchema; onSubmitted?: (output: any) => void };
 
-export function FormRenderer({ schema }: Props) {
+export function FormRenderer({ schema, onSubmitted }: Props) {
     // form values and UX state
     const [values, setValues] = useState<Record<string, any>>({});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
     const [submitAttempted, setSubmitAttempted] = useState(false);
-    const [submitOutput, setSubmitOutput] = useState<any | null>(null);
 
     // auto-fill state
     const [loadingKeys, setLoadingKeys] = useState<Record<string, boolean>>({});
@@ -171,7 +169,7 @@ export function FormRenderer({ schema }: Props) {
         if (invalid) return;
 
         const output = buildSubmission(schema, values, isVisible);
-        setSubmitOutput(output);
+        onSubmitted?.(output);
     };
 
     // auto-fill effect
@@ -227,9 +225,6 @@ export function FormRenderer({ schema }: Props) {
             <Button type="submit" variant="contained" color="primary">
                 Submit
             </Button>
-            {submitOutput && (
-                <JsonPreview data={submitOutput} onClose={() => setSubmitOutput(null)} />
-            )}
         </Box>
     );
 }

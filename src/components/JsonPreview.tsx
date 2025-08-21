@@ -1,4 +1,4 @@
-import { Paper, Typography, Box, Button } from "@mui/material";
+import { Paper, Box, Button } from "@mui/material";
 
 type Props = {
     data: unknown;
@@ -10,9 +10,6 @@ export function JsonPreview({ data, onClose }: Props) {
 
     return (
         <Paper elevation={2} sx={{ p: 2, mt: 2 }}>
-            <Typography variant="h6" gutterBottom>
-                Submission JSON
-            </Typography>
             <Box
                 component="pre"
                 sx={{
