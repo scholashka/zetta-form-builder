@@ -61,3 +61,10 @@ export type AutoFillConfig = {
     map: Record<string, string>; // Map API response keys to field IDs
     whenVisibleOnly?: boolean; // Only fill if the form is visible
 };
+
+export type SubmittedGroup = {
+    id: string;
+    label: string;
+    fields: { id: string; label: string; value: any }[];
+    groups: SubmittedGroup[];
+};
