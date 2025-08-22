@@ -1,6 +1,6 @@
 import { Box, Typography, Paper } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { panelColors } from "../main";
+import { panelColors } from "../lib/panelColors";
 
 type Props = {
     label: string;
