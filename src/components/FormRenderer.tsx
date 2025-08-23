@@ -21,13 +21,15 @@ import {
 } from "../lib/autofill";
 import { buildSubmission } from "../lib/submission";
 
-import { loadProgress, saveProgress, clearProgress } from "../lib/autosave";
-
-type Props = { schema: FormSchema; onSubmitted?: (output: any) => void };
-
-export function FormRenderer({ schema, onSubmitted }: Props) {
+type Props = {
+    schema: FormSchema;
+    initialValues?: Record<string, any>;
+    onValuesChange?: (values: Record<string, any>) => void;
+    onSubmitted?: (output: any) => void;
+};
+export function FormRenderer({ schema, initialValues, onValuesChange, onSubmitted }: Props) {
     // form values and UX state
-    const [values, setValues] = useState<Record<string, any>>({});
+    const [values, setValues] = useState<Record<string, any>>(initialValues ?? {});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
     const [submitAttempted, setSubmitAttempted] = useState(false);
 
@@ -42,6 +44,10 @@ export function FormRenderer({ schema, onSubmitted }: Props) {
     const handleBlur = (fieldId: string) => {
         setTouched((prev) => ({ ...prev, [fieldId]: true }));
     };
+
+    useEffect(() => {
+        onValuesChange?.(values);
+    }, [values, onValuesChange]);
 
     // visibility check for groups/fields
     const isVisible = (item: Group | Field) => {
@@ -172,29 +178,7 @@ export function FormRenderer({ schema, onSubmitted }: Props) {
 
         const output = buildSubmission(schema, values, isVisible);
         onSubmitted?.(output);
-
-        // Clear saved LS draft after a successful submit
-        clearProgress();
     };
-    // auto-save effect
-    useEffect(() => {
-        const id = setTimeout(() => {
-            saveProgress(values);
-        }, 500); // debounce 500ms
-
-        return () => clearTimeout(id);
-    }, [values]);
-
-    // load saved progress on schema change
-    useEffect(() => {
-        const saved = loadProgress();
-        if (saved?.values) {
-            setValues((prev) => ({ ...prev, ...saved.values }));
-        }
-        setTouched({});
-        setSubmitAttempted(false);
-    }, [schema]);
-
     // auto-fill effect
     useEffect(() => {
         const autoFills = collectAutoFills(schema);

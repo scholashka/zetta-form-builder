@@ -1,6 +1,7 @@
 // localStorage helpers
 
 export type SavedPayload = {
+    schema: string;
     values: Record<string, any>;
     savedAt: number;
 };
@@ -17,15 +18,16 @@ export function loadProgress(): SavedPayload | null {
     }
 }
 
-export function saveProgress(values: Record<string, any>) {
+export function saveProgress(schema: string, values: Record<string, any>) {
     try {
         const payload: SavedPayload = {
+            schema,
             values,
             savedAt: Date.now(),
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch {
-        // ignore quota / serialization errors
+        // error saving, ignore
     }
 }
 
@@ -33,6 +35,6 @@ export function clearProgress() {
     try {
         localStorage.removeItem(STORAGE_KEY);
     } catch {
-        // ignore
+        // error clearing, ignore
     }
 }

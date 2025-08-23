@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     AppBar, Toolbar, Typography, Container, Paper, Drawer, Box, IconButton, Stack
 } from "@mui/material";
@@ -7,14 +7,34 @@ import { SchemaEditor } from "../../components/SchemaEditor";
 import { FormRenderer } from "../../components/FormRenderer";
 import { FormSchema } from "../../types/formTypes";
 import { JsonPreview } from "../../components/JsonPreview";
+import { clearProgress, loadProgress, saveProgress } from "../../lib/autosave";
 
 export default function FormBuilder() {
     const [jsonInput, setJsonInput] = useState<string>("");
     const [schema, setSchema] = useState<FormSchema | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [values, setValues] = useState<Record<string, any>>({});
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [submission, setSubmission] = useState<any | null>(null);
+
+    useEffect(() => {
+        const saved = loadProgress();
+        if (saved?.schema) {
+            setJsonInput(saved.schema);
+            try {
+                const parsed = JSON.parse(saved.schema) as FormSchema;
+                setSchema(parsed);
+                setError(null);
+            } catch {
+                setSchema(null);
+                setError("Invalid JSON");
+            }
+        }
+        if (saved?.values) {
+            setValues(saved.values);
+        }
+    }, []);
 
     const handleJsonChange = (data: string) => {
         setJsonInput(data);
@@ -22,15 +42,26 @@ export default function FormBuilder() {
             const parsed = JSON.parse(data) as FormSchema;
             setSchema(parsed);
             setError(null);
+            saveProgress(data, values);   // valid schema
         } catch {
             setSchema(null);
             setError("Invalid JSON");
+            saveProgress(data, values);   // still save raw text
         }
     };
+    // debounce save on value changes
+    useEffect(() => {
+        const id = setTimeout(() => {
+            saveProgress(jsonInput, values);
+        }, 400);
+        return () => clearTimeout(id);
+    }, [jsonInput, values]);
 
     const handleSubmitted = (output: any) => {
         setSubmission(output);
         setDrawerOpen(true);
+        clearProgress();
+        setValues({});
     };
 
     return (
@@ -51,6 +82,7 @@ export default function FormBuilder() {
                             value={jsonInput}
                             onChange={handleJsonChange}
                             error={error}
+
                         />
                     </Box>
 
@@ -65,7 +97,12 @@ export default function FormBuilder() {
                                     Paste a valid JSON schema on the left to render the form.
                                 </Typography>
                             ) : (
-                                <FormRenderer schema={schema} onSubmitted={handleSubmitted} />
+                                <FormRenderer
+                                    schema={schema}
+                                    onSubmitted={handleSubmitted}
+                                    initialValues={values}
+                                    onValuesChange={setValues}
+                                />
                             )}
                         </Paper>
                     </Box>
