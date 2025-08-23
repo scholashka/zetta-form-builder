@@ -21,6 +21,8 @@ import {
 } from "../lib/autofill";
 import { buildSubmission } from "../lib/submission";
 
+import { loadProgress, saveProgress, clearProgress } from "../lib/autosave";
+
 type Props = { schema: FormSchema; onSubmitted?: (output: any) => void };
 
 export function FormRenderer({ schema, onSubmitted }: Props) {
@@ -170,7 +172,28 @@ export function FormRenderer({ schema, onSubmitted }: Props) {
 
         const output = buildSubmission(schema, values, isVisible);
         onSubmitted?.(output);
+
+        // Clear saved LS draft after a successful submit
+        clearProgress();
     };
+    // auto-save effect
+    useEffect(() => {
+        const id = setTimeout(() => {
+            saveProgress(values);
+        }, 500); // debounce 500ms
+
+        return () => clearTimeout(id);
+    }, [values]);
+
+    // load saved progress on schema change
+    useEffect(() => {
+        const saved = loadProgress();
+        if (saved?.values) {
+            setValues((prev) => ({ ...prev, ...saved.values }));
+        }
+        setTouched({});
+        setSubmitAttempted(false);
+    }, [schema]);
 
     // auto-fill effect
     useEffect(() => {
