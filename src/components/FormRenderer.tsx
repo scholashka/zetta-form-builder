@@ -21,11 +21,15 @@ import {
 } from "../lib/autofill";
 import { buildSubmission } from "../lib/submission";
 
-type Props = { schema: FormSchema; onSubmitted?: (output: any) => void };
-
-export function FormRenderer({ schema, onSubmitted }: Props) {
+type Props = {
+    schema: FormSchema;
+    initialValues?: Record<string, any>;
+    onValuesChange?: (values: Record<string, any>) => void;
+    onSubmitted?: (output: any) => void;
+};
+export function FormRenderer({ schema, initialValues, onValuesChange, onSubmitted }: Props) {
     // form values and UX state
-    const [values, setValues] = useState<Record<string, any>>({});
+    const [values, setValues] = useState<Record<string, any>>(initialValues ?? {});
     const [touched, setTouched] = useState<Record<string, boolean>>({});
     const [submitAttempted, setSubmitAttempted] = useState(false);
 
@@ -40,6 +44,10 @@ export function FormRenderer({ schema, onSubmitted }: Props) {
     const handleBlur = (fieldId: string) => {
         setTouched((prev) => ({ ...prev, [fieldId]: true }));
     };
+
+    useEffect(() => {
+        onValuesChange?.(values);
+    }, [values, onValuesChange]);
 
     // visibility check for groups/fields
     const isVisible = (item: Group | Field) => {
@@ -171,7 +179,6 @@ export function FormRenderer({ schema, onSubmitted }: Props) {
         const output = buildSubmission(schema, values, isVisible);
         onSubmitted?.(output);
     };
-
     // auto-fill effect
     useEffect(() => {
         const autoFills = collectAutoFills(schema);
