@@ -35,6 +35,14 @@ export default function FormBuilder() {
             setValues(saved.values);
         }
     }, []);
+    // debounce save on value changes
+    useEffect(() => {
+        const id = setTimeout(() => {
+            saveProgress(jsonInput, values);
+        }, 400);
+
+        return () => clearTimeout(id);
+    }, [jsonInput, values]);
 
     const handleJsonChange = (data: string) => {
         setJsonInput(data);
@@ -49,19 +57,17 @@ export default function FormBuilder() {
             saveProgress(data, values);   // still save invalid schema
         }
     };
-    // debounce save on value changes
-    useEffect(() => {
-        const id = setTimeout(() => {
-            saveProgress(jsonInput, values);
-        }, 400);
-        return () => clearTimeout(id);
-    }, [jsonInput, values]);
 
     const handleSubmitted = (output: any) => {
         setSubmission(output);
         setDrawerOpen(true);
+
+        // Clear draft completely
         clearProgress();
         setValues({});
+        setJsonInput("");
+        setSchema(null);
+        setError(null);
     };
 
     return (
