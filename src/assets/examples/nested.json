@@ -1,0 +1,61 @@
+{
+    "title": "Nested Groups",
+    "groups": [
+        {
+            "id": "contact",
+            "label": "Contact",
+            "fields": [
+                {
+                    "id": "email",
+                    "type": "text",
+                    "label": "Email",
+                    "validations": {
+                        "pattern": "^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,}$",
+                        "message": "Must be a valid email"
+                    }
+                }
+            ],
+            "groups": [
+                {
+                    "id": "address",
+                    "label": "Address",
+                    "fields": [
+                        {
+                            "id": "street",
+                            "type": "text",
+                            "label": "Street"
+                        },
+                        {
+                            "id": "city",
+                            "type": "text",
+                            "label": "City"
+                        },
+                        {
+                            "id": "zip",
+                            "type": "text",
+                            "label": "ZIP"
+                        }
+                    ],
+                    "groups": [
+                        {
+                            "id": "region",
+                            "label": "Region",
+                            "fields": [
+                                {
+                                    "id": "country",
+                                    "type": "text",
+                                    "label": "Country"
+                                },
+                                {
+                                    "id": "state",
+                                    "type": "text",
+                                    "label": "State/Province"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

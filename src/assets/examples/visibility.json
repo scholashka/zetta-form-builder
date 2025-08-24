@@ -1,0 +1,42 @@
+{
+    "title": "Visibility Demo",
+    "groups": [
+        {
+            "id": "type",
+            "label": "Account Type",
+            "fields": [
+                {
+                    "id": "kind",
+                    "type": "dropdown",
+                    "label": "Kind",
+                    "options": [
+                        "INDIVIDUAL",
+                        "BUSINESS"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "business",
+            "label": "Business Details",
+            "visibleWhen": {
+                "kind": "BUSINESS"
+            },
+            "fields": [
+                {
+                    "id": "company",
+                    "type": "text",
+                    "label": "Company Name",
+                    "validations": {
+                        "required": true
+                    }
+                },
+                {
+                    "id": "vat",
+                    "type": "text",
+                    "label": "VAT Number"
+                }
+            ]
+        }
+    ]
+}
