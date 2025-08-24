@@ -22,7 +22,7 @@ npm run dev
 
 # run tests
 npm run test
-
+```
 
 ---
 
@@ -36,6 +36,7 @@ npm run test
 ---
 
 ## Project structure (key parts)
+
 ```
 src/
   assets/
