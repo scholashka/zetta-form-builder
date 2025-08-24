@@ -1,0 +1,42 @@
+{
+    "title": "User Autofill",
+    "groups": [
+        {
+            "id": "personal",
+            "label": "Personal",
+            "autoFill": {
+                "api": "userProfile",
+                "inputFields": [
+                    "firstName",
+                    "lastName"
+                ],
+                "map": {
+                    "fullName": "fullName",
+                    "email": "email"
+                }
+            },
+            "fields": [
+                {
+                    "id": "firstName",
+                    "type": "text",
+                    "label": "First Name"
+                },
+                {
+                    "id": "lastName",
+                    "type": "text",
+                    "label": "Last Name"
+                },
+                {
+                    "id": "fullName",
+                    "type": "text",
+                    "label": "Full Name"
+                },
+                {
+                    "id": "email",
+                    "type": "text",
+                    "label": "Email"
+                }
+            ]
+        }
+    ]
+}

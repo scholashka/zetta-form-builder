@@ -46,7 +46,7 @@ export default function FormBuilder() {
         } catch {
             setSchema(null);
             setError("Invalid JSON");
-            saveProgress(data, values);   // still save raw text
+            saveProgress(data, values);   // still save invalid schema
         }
     };
     // debounce save on value changes

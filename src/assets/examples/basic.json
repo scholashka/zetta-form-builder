@@ -1,0 +1,29 @@
+{
+    "title": "Basic Profile",
+    "groups": [
+        {
+            "id": "g1",
+            "label": "Profile",
+            "fields": [
+                {
+                    "id": "firstName",
+                    "type": "text",
+                    "label": "First Name",
+                    "validations": {
+                        "required": true
+                    }
+                },
+                {
+                    "id": "lastName",
+                    "type": "text",
+                    "label": "Last Name"
+                },
+                {
+                    "id": "bio",
+                    "type": "textarea",
+                    "label": "Bio"
+                }
+            ]
+        }
+    ]
+}

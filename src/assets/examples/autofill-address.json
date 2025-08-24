@@ -1,0 +1,48 @@
+{
+    "title": "Address Autofill",
+    "groups": [
+        {
+            "id": "address",
+            "label": "Address",
+            "autoFill": {
+                "api": "addressLookup",
+                "inputFields": [
+                    "zip",
+                    "country"
+                ],
+                "map": {
+                    "street": "street",
+                    "city": "city",
+                    "region": "region"
+                }
+            },
+            "fields": [
+                {
+                    "id": "zip",
+                    "type": "text",
+                    "label": "ZIP"
+                },
+                {
+                    "id": "country",
+                    "type": "text",
+                    "label": "Country"
+                },
+                {
+                    "id": "street",
+                    "type": "text",
+                    "label": "Street"
+                },
+                {
+                    "id": "city",
+                    "type": "text",
+                    "label": "City"
+                },
+                {
+                    "id": "region",
+                    "type": "text",
+                    "label": "Region"
+                }
+            ]
+        }
+    ]
+}

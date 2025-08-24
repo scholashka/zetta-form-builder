@@ -64,7 +64,7 @@ export function FormRenderer({ schema, initialValues, onValuesChange, onSubmitte
         return { error: showError, helperText: showError ? res.error : " " };
     };
 
-    // render a single field (delegating to input components)
+    // render a single field
     const renderField = (field: Field) => {
         if (!isVisible(field)) return null;
 

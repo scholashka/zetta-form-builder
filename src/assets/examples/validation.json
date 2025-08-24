@@ -1,0 +1,39 @@
+{
+    "title": "Validation Showcase",
+    "groups": [
+        {
+            "id": "g",
+            "label": "Rules",
+            "fields": [
+                {
+                    "id": "username",
+                    "type": "text",
+                    "label": "Username",
+                    "validations": {
+                        "required": true,
+                        "minLength": 3,
+                        "maxLength": 12
+                    }
+                },
+                {
+                    "id": "password",
+                    "type": "validatedInput",
+                    "label": "Password",
+                    "validations": {
+                        "required": true,
+                        "pattern": "^(?=.*[A-Z])(?=.*\\d).{8,}$",
+                        "message": "Min 8 chars, 1 uppercase, 1 number"
+                    }
+                },
+                {
+                    "id": "agree",
+                    "type": "checkbox",
+                    "label": "Accept Terms",
+                    "validations": {
+                        "required": true
+                    }
+                }
+            ]
+        }
+    ]
+}
